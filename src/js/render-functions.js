@@ -5,6 +5,7 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+
 let lightbox;
 
 export function displayImages(images, gallery) {
@@ -47,4 +48,12 @@ export function showError(message) {
 
 export function showWarning(message) {
   iziToast.warning({ message });
+}
+
+export function showLoadMoreButton(button) {
+  button.style.display = 'block';
+}
+
+export function hideLoadMoreButton(button) {
+  button.style.display = 'none';
 }
