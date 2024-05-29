@@ -13,6 +13,8 @@ const loadMoreBtn = document.getElementById('load-more');
 
 let currentPage = 1;
 let currentQuery = '';
+let totalHits = 0;
+let perPage = 15;
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -30,16 +32,19 @@ form.addEventListener('submit', async (event) => {
     showLoader(loader);
 
     try {
-        const data = await fetchImages(currentQuery, currentPage);
+        const { images, totalHits: fetchedTotalHits } = await fetchImages(currentQuery, currentPage);
+        totalHits = fetchedTotalHits;
         hideLoader(loader);
 
-        if (data.hits.length === 0) {
+        if (images.length === 0) {
         showWarning('Sorry, there are no images matching your search query. Please try again!');
         return;
         }
 
-        displayImages(data.hits, gallery);
-        showLoadMoreButton(loadMoreBtn);
+        displayImages(images, gallery);
+        if (images.length < totalHits) {
+            showLoadMoreButton(loadMoreBtn);
+        }
     } catch (error) {
         hideLoader(loader);
         showError('Something went wrong. Please try again later.');
@@ -52,23 +57,21 @@ loadMoreBtn.addEventListener('click', async () => {
     showLoader(loader);
 
     try {
-        const data = await fetchImages(currentQuery, currentPage);
+        const { images } = await fetchImages(currentQuery, currentPage);
         hideLoader(loader);
 
-    if (data.hits.length === 0) {
-        showWarning("We're sorry, but you've reached the end of search results.");
-        hideLoadMoreButton(loadMoreBtn);
-        return;
-    }
+        displayImages(images, gallery);
 
-        displayImages(data.hits, gallery);
-    
-    const { height: cardHeight } = gallery.firstElementChild.getBoundingClientRect();
-    window.scrollBy({
-        top: cardHeight * 2,
-        behavior: 'smooth',
-    });
+        const { height: cardHeight } = gallery.firstElementChild.getBoundingClientRect();
+        window.scrollBy({
+            top: cardHeight * 2,
+            behavior: 'smooth',
+        });
 
+        if (currentPage * perPage >= totalHits) {
+            hideLoadMoreButton(loadMoreBtn);
+            showWarning("We're sorry, but you've reached the end of search results.");
+        }
     } catch (error) {
         hideLoader(loader);
         showError('Something went wrong. Please try again later.');

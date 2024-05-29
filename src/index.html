@@ -9,13 +9,15 @@
   <body>
     <header>
       <form id="search-form">
-        <input type="text" id="search-input" placeholder="Search images..." />
+        <input type="search" id="search-input" placeholder="Search images..." />
         <button type="submit">Search</button>
       </form>
     </header>
 
     <main>
-      <div id="loader" class="loader"></div>
+      <div id="loader" class="loader">
+        <p>Loading images, please wait...</p>
+      </div>
       <ul id="gallery"></ul>
       <button id="load-more" style="display: none">Load more</button>
     </main>

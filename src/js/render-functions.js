@@ -6,9 +6,11 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
 
-let lightbox;
+let lightbox = new SimpleLightbox('#gallery a', {});
 
 export function displayImages(images, gallery) {
+  if (images.length === 0) return;
+
   const markup = images.map(image => {
     return `
       <li>
@@ -25,13 +27,8 @@ export function displayImages(images, gallery) {
     `;
   }).join('');
 
-    gallery.insertAdjacentHTML('beforeend', markup);
-    
-    if (lightbox) {
-    lightbox.refresh();
-  } else {
-    lightbox = new SimpleLightbox('#gallery a', {});
-  }
+  gallery.insertAdjacentHTML('beforeend', markup);
+  lightbox.refresh();
 }
 
 export function showLoader(loader) {
